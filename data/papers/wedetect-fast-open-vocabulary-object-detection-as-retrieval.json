@@ -1,0 +1,80 @@
+{
+  "id": "wedetect-fast-open-vocabulary-object-detection-as-retrieval",
+  "title": "WeDetect: Fast Open-Vocabulary Object Detection as Retrieval",
+  "authors": ["Shenghao Fu", "Yukun Su", "Fengyun Rao", "Jing Lyu", "Xiaohua Xie", "Wei-Shi Zheng"],
+  "year": 2026,
+  "publication_date": null,
+  "venue_or_source": "CVPR 2026",
+  "venue_type": "Conference",
+  "ranking": {"ccf": null, "cas": null, "jcr": null, "ranking_year": null, "ranking_source": null},
+  "identifiers": {"doi": null, "arxiv": "2512.12309", "openreview": null},
+  "urls": {
+    "paper": "https://openaccess.thecvf.com/content/CVPR2026/html/Fu_WeDetect_Fast_Open-Vocabulary_Object_Detection_as_Retrieval_CVPR_2026_paper.html",
+    "code": "https://github.com/WeChatCV/WeDetect"
+  },
+  "topics": ["目标检测", "开放词汇目标检测", "实时检测", "视觉语言模型", "目标检索"],
+  "relevance": "High",
+  "reading_basis": "full_text",
+  "quick_read": {
+    "tldr": "WeDetect 研究开放词汇目标检测如何同时做到高精度和实时推理。核心做法不是增加更重的视觉—文本融合，而是采用双塔结构，把候选区域与文本类别在共享特征空间中的匹配重新看成检索问题。论文进一步扩展出 WeDetect-Uni 和 WeDetect-Ref，使同一检索思路覆盖通用候选框、历史目标检索和指代表达定位。",
+    "problem_and_motivation": "开放词汇检测希望用任意文本类别检测目标。强力方法常依赖深层跨模态融合，但这会增加推理成本，而且更换文本查询时视觉特征难以直接复用。作者要回答的是：如果坚持更简单的非融合双塔结构，并把数据和训练做好，能否同时获得强检测能力与高效率。",
+    "core_method": "WeDetect 分别编码图像区域和文本，通过共享特征空间中的相似度完成分类，不使用昂贵的深层跨模态融合。作者配合大规模、多粒度标注数据训练检测器；WeDetect-Uni 冻结主体并学习 objectness prompt 来产生类别无关候选框；WeDetect-Ref 再利用这些候选框，把复杂指代表达定位转成并行的目标匹配问题。",
+    "key_results": "WeDetect-Large 在 LVIS 上达到 49.4 AP；WeDetect-Tiny 达到 37.4 AP 且约 62.5 FPS。WeDetect-Ref 在 RefCOCO/+/g 上平均达到 93.2，并以约 5.3 FPS 运行；论文整体在 15 个基准上验证了检测、候选框、目标检索和指代表达理解能力。",
+    "why_it_matters": "这项工作说明目标检测中的速度与开放词汇能力不一定必须依靠复杂跨模态融合来交换。对实时检测研究尤其有价值：高质量数据、可复用视觉特征和检索式分类可以成为另一条兼顾精度、速度与扩展性的路线。"
+  },
+  "detail": {
+    "motivation": "开放词汇目标检测把传统固定类别检测扩展到任意文本类别。现有高精度方案常在视觉和文本之间加入深层跨模态融合，让查询直接参与视觉特征计算。这种方式表达能力强，但计算开销高；当类别词发生变化时，视觉侧的计算也不容易复用。对于实时检测、海量类别扫描和历史图像检索，这一点尤其不利。\n\n作者重新审视非融合双塔路线：视觉区域和文本分别编码，只在共享特征空间中做相似度匹配。过去这类方法通常更快，但精度落后。论文的关键判断是，差距未必来自双塔范式本身，而可能更多来自训练数据规模、标注粒度和训练方式。因此作者不是继续堆融合模块，而是把重点放在高质量多粒度数据、充分训练以及检索式任务统一上。",
+    "contributions": [
+      {"contribution": "提出实时开放词汇检测器 WeDetect，用非融合双塔结构把区域分类建模为视觉区域与文本查询之间的检索，在保持视觉特征可复用的同时取得强检测性能。", "source": "Introduction; Method / WeDetect"},
+      {"contribution": "通过大规模且具有多粒度语义标签的数据与分阶段训练，证明非融合架构的性能上限可以显著提高，挑战了高精度开放词汇检测必须依赖深层跨模态融合的常见设计。", "source": "Method / Data and training; Ablation experiments"},
+      {"contribution": "提出 WeDetect-Uni：冻结检测器主体，仅学习 objectness prompt 生成通用候选框，并保留具有类别判别性的区域特征，从而支持对历史图像中的局部目标进行检索。", "source": "Method / WeDetect-Uni; Experiments / Universal proposals and object retrieval"},
+      {"contribution": "提出 WeDetect-Ref，将大多模态模型用于候选目标分类而非逐 token 生成边界框，使复杂指代表达定位也落入同一检索框架。", "source": "Method / WeDetect-Ref; Experiments / Referring expression comprehension"},
+      {"contribution": "在 15 个基准上覆盖开放词汇检测、通用候选框、目标检索和指代表达理解，系统展示检索式视觉识别在精度、速度和任务扩展性上的优势。", "source": "Experiments; Tables 2–7"}
+    ],
+    "research_questions": [
+      {
+        "type": "inferred",
+        "question": "不依赖深层视觉—文本融合，能否通过高质量数据和充分训练，让检索式双塔架构同时获得高精度、实时的开放词汇目标检测能力，并扩展到更多目标级视觉任务？",
+        "original_question": null,
+        "how": "作者构建 WeDetect 双塔检测器，并扩展 WeDetect-Uni 与 WeDetect-Ref；在 LVIS、COCO、COCO-O、ODinW、RefCOCO 系列等基准上比较检测精度、召回、检索性能和推理速度，同时用数据与结构消融分析性能来源。",
+        "answer": "实验支持这一目标。WeDetect-Large 在 LVIS 达到 49.4 AP，Tiny 版本在 37.4 AP 的同时达到约 62.5 FPS；WeDetect-Ref 在 RefCOCO/+/g 平均达到 93.2。结果表明，非融合检索路线在数据和训练充分时可以兼顾精度与效率，并能自然扩展到候选框、目标检索和指代表达定位。",
+        "meaning": "目标检测架构的能力上限不仅由融合模块决定。把视觉特征做成可缓存、可检索的目标级表示，可以同时改善实时性和后续任务复用，为实时开放世界感知提供更工程化的基础。",
+        "source": "Introduction, problem formulation and stated goals"
+      }
+    ],
+    "research_questions_empty_reason": null,
+    "research_questions_empty_source": null,
+    "method": "WeDetect 的基础结构采用视觉塔与文本塔分离的设计。图像经过检测骨干和多尺度特征处理后产生候选区域表示，文本类别由文本编码器独立编码；分类阶段直接比较区域特征和文本特征的相似度。由于没有针对每个文本查询重复执行深层跨模态融合，视觉特征可以一次计算后服务多个类别查询，这对大词表和实时推理很重要。\n\n论文把数据工程作为核心组成部分。训练数据覆盖大量图像和目标实例，并为目标提供不同粒度的语义描述。这样做的目的，是让双塔模型不仅学习粗类别，还能在共享特征空间中形成更细的目标—文本对齐。消融结果表明，细粒度标签对性能提升尤其重要，说明简单架构要获得强开放词汇能力，需要足够丰富的监督。\n\nWeDetect-Uni 在基础检测器上进一步学习类别无关的 objectness prompt。主体参数冻结后，它可以产生通用目标候选框，同时保留区域嵌入。这样历史图库可以预先计算并缓存目标特征，后续新查询只需做相似度检索，而不必重新运行完整检测。\n\nWeDetect-Ref 面向复杂自然语言指代表达。它先使用 WeDetect-Uni 获得候选目标，再让大多模态模型判断候选目标是否匹配查询。与逐 token 生成坐标不同，这里把问题变成候选目标分类，因此可以并行处理候选框并降低生成式定位的开销。",
+    "experiments_and_key_findings": "开放词汇检测实验覆盖 LVIS、COCO、COCO-O 和 ODinW 等数据。WeDetect-Tiny 在 LVIS 达到 37.4 AP，同时推理速度约 62.5 FPS；WeDetect-Large 达到 49.4 AP，并相对典型融合式检测器保持明显速度优势。这说明双塔路线并非只能换取速度，在充分数据和训练下也能达到很强的精度。\n\n论文进一步评估通用候选框与目标检索。WeDetect-Uni 冻结基础检测器，仅训练少量 prompt 后仍能取得较高目标召回；其局部目标特征用于目标检索时，相比以整图语义为主的 CLIP 类基线具有明显优势。这里的关键区别是检索单位从整张图变成候选目标，因此更适合“在历史数据里找某个具体物体”。\n\n在指代表达理解上，WeDetect-Ref 在 RefCOCO、RefCOCO+ 和 RefCOCOg 上平均达到 93.2，并以约 5.3 FPS 运行。论文还报告其速度显著高于同规模生成式多模态模型。消融表明，负样本、分类损失和目标 token 设计都会影响误检与效率，说明把大模型改造成目标分类器时，训练目标本身非常关键。",
+    "limitations": {
+      "author_reported": [
+        "WeDetect-Ref 面向单个查询做候选目标匹配；当需要同时扫描大量不同查询时，需要多次推理并合并结果，因此查询数量很大时总计算量仍会上升。",
+        "模型的强性能明显依赖大规模、高质量、多粒度检测数据与充分训练，数据构建本身具有较高工程成本。"
+      ],
+      "ai_analysis": [
+        "论文证明了非融合双塔在开放词汇检测上的上限，但训练数据规模与模型结构贡献存在耦合。后续比较应在更严格的数据量、预训练来源和算力对齐条件下验证架构优势。",
+        "历史目标检索依赖预先生成的候选框和区域嵌入。如果首轮候选框漏掉小目标、遮挡目标或域外目标，后续再强的文本检索也无法恢复这些实例。",
+        "实时速度对硬件、输入尺寸、类别数量和推理实现高度敏感。部署到边缘设备或 3D/多传感器检测场景时，需要重新测量端到端延迟、显存和能耗。"
+      ]
+    },
+    "relation_to_research": "该论文与目标检测研究方向高度相关，同时覆盖 Wang Research Profile 中的开放词汇检测和实时检测两个重点。它提供了一个很有价值的对照思路：与其继续增加复杂的跨模态融合，可以研究如何让检测区域特征成为稳定、可缓存、可检索的通用表示。\n\n对于传统 2D 检测，可以把 WeDetect 与 YOLO、DETR 系和 Grounding-DINO 类方法放在统一的精度—延迟—类别规模曲线上比较；对于 3D 检测，则可以进一步研究这种“候选目标嵌入 + 文本检索”范式能否迁移到点云或多传感器目标级表示。论文的数据消融也提示，开放词汇检测的提升不应只看网络模块，标签粒度和训练数据构成同样需要作为实验变量。",
+    "what_can_be_done_next": [
+      {"title": "在统一数据预算下比较融合与非融合检测器", "rationale": "WeDetect 的核心结论是非融合双塔在高质量数据支持下也能达到强性能，但数据规模与架构收益存在耦合。", "concrete_plan": "固定训练图像、目标框、文本标签和预训练权重，分别训练双塔检索式检测器与带跨模态融合的检测器，并逐级缩放数据量和标签粒度。", "validation": "在 LVIS、COCO-O 和 ODinW 上同时报告 AP、未见类 AP、FPS、显存和不同类别数量下的延迟，并做数据规模曲线。", "expected_value": "可以更清楚地区分性能提升来自架构还是数据，为实时开放词汇检测选型提供更可信依据。", "source": "Ablation experiments on data granularity and the non-fusion design"},
+      {"title": "研究小目标和遮挡条件下的通用候选框召回", "rationale": "WeDetect-Uni 的历史检索能力建立在首轮候选框不漏目标的前提上，而小目标和遮挡通常是 proposal 阶段的薄弱点。", "concrete_plan": "按目标尺寸、遮挡率和密集程度划分 LVIS/COCO 样本，分析 WeDetect-Uni 的 AR@K；再加入高分辨率特征、动态候选数量或小目标专用 objectness prompt。", "validation": "比较不同尺寸上的 AR@100/300、后续目标检索 F1、额外 FLOPs 和延迟，确认召回提升是否真正传递到检索端。", "expected_value": "能判断检索式检测系统的主要误差是否来自候选生成，并提高复杂场景中的实际可用性。", "source": "WeDetect-Uni universal proposal and object retrieval experiments"},
+      {"title": "把检索式开放词汇检测迁移到 3D 目标检测", "rationale": "Research Profile 同时关注 3D Detection，而 WeDetect 展示了可缓存目标级嵌入对开放词汇和历史检索的价值。", "concrete_plan": "在点云或相机—LiDAR 3D 检测器中提取 proposal-level 3D 特征，通过文本对齐训练类别嵌入，并比较无融合检索与跨模态融合两种分类头。", "validation": "在 nuScenes 或 Waymo 的已见/未见类别划分上报告 3D mAP、NDS、开放词汇泛化、类别扩展延迟和特征缓存成本。", "expected_value": "可检验 WeDetect 的效率优势是否跨越 2D 场景，并为开放词汇 3D 感知提供轻量基线。", "source": "WeDetect retrieval formulation; Research Profile includes 3D Detection"},
+      {"title": "建立类别规模变化下的真实端到端延迟曲线", "rationale": "非融合结构的一个关键优势是视觉特征可复用，因此理论上类别词越多越有利，但常规 FPS 指标不能完整反映这一点。", "concrete_plan": "固定同一批图像，逐步把查询词表从 10、80、1,203 扩展到更大规模，分别测量特征提取、文本编码、相似度匹配、NMS 和总延迟。", "validation": "与 Grounding-DINO、YOLO-World 等代表方法比较端到端延迟、吞吐、显存及缓存复用后的多轮查询成本。", "expected_value": "能把“可复用视觉特征”的架构优势转化为可直接指导部署的工程指标。", "source": "Introduction and efficiency experiments"}
+    ]
+  },
+  "original_abstract": "Open-vocabulary object detection aims to detect arbitrary classes via text prompts. Methods without cross-modal fusion layers (non-fusion) offer faster inference by treating recognition as a retrieval problem, i.e., matching regions to text queries in a shared embedding space. In this work, we fully explore this retrieval philosophy and demonstrate its unique advantages in efficiency and versatility through a model family named WeDetect: (1) State-of-the-art performance. WeDetect is a real-time detector with a dual-tower architecture. We show that, with well-curated data and full training, the non-fusion WeDetect surpasses other fusion models and establishes a strong open-vocabulary foundation. (2) Fast backtrack of historical data. WeDetect-Uni is a universal proposal generator based on WeDetect. We freeze the entire detector and only finetune an objectness prompt to retrieve generic object proposals across categories. Importantly, the proposal embeddings are class-specific and enable a new application, object retrieval, supporting retrieval objects in historical data. (3) Integration with LMMs for referring expression comprehension (REC). We further propose WeDetect-Ref, an LMM-based object classifier to handle complex referring expressions, which retrieves target objects from the proposal list extracted by WeDetect-Uni. It discards next-token prediction and classifies objects in a single forward pass. Together, the WeDetect family unifies detection, proposal generation, object retrieval, and REC under a coherent retrieval framework, achieving state-of-the-art performance across 15 benchmarks with high inference efficiency.",
+  "bibtex": "@InProceedings{Fu_2026_CVPR,\n  author = {Fu, Shenghao and Su, Yukun and Rao, Fengyun and Lyu, Jing and Xie, Xiaohua and Zheng, Wei-Shi},\n  title = {WeDetect: Fast Open-Vocabulary Object Detection as Retrieval},\n  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},\n  month = {June},\n  year = {2026},\n  pages = {20377--20387}\n}",
+  "figures": [],
+  "evidence": [
+    {"claim": "WeDetect uses a non-fusion dual-tower retrieval formulation for open-vocabulary object detection.", "locator": "Abstract; Introduction; Method / WeDetect", "url": "https://arxiv.org/abs/2512.12309"},
+    {"claim": "WeDetect-Large reaches 49.4 AP on LVIS and WeDetect-Tiny reaches 37.4 AP at about 62.5 FPS.", "locator": "Experiments / open-vocabulary detection results", "url": "https://arxiv.org/abs/2512.12309"},
+    {"claim": "WeDetect-Ref reaches 93.2 average on RefCOCO/+/g and runs at about 5.3 FPS.", "locator": "Experiments / referring expression comprehension", "url": "https://arxiv.org/abs/2512.12309"}
+  ],
+  "generated_by": "ChatGPT Scheduled Research Agent",
+  "generated_at": "2026-09-19T08:00:00+08:00",
+  "updated_at": "2026-09-19T08:00:00+08:00",
+  "owner_edited": false
+}
