@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
-test('empty template has accessible primary pages', async ({ page }) => {
+test('personalized library has accessible primary pages', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: '你的研究方向' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '目标检测' })).toBeVisible();
   await expect(page.locator('.eyebrow')).toContainText('研究知识库 ·');
   await expect(page.locator('.hero-subtitle')).toHaveText('研究知识库');
   await expect(page.locator('.hero .lede')).toHaveText(
-    '围绕你的研究方向，整理相关论文、方法与可复现研究证据。',
+    '围绕目标检测，整理相关论文、方法与可复现研究证据。',
   );
   await page.getByRole('link', { name: '论文池', exact: true }).click();
   await expect(page.getByRole('heading', { name: '论文池' })).toBeVisible();
