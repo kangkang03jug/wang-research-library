@@ -1,11 +1,16 @@
 profile:
-  researcher: 'Your Name'
-  library_name: 'Your Research Library'
-  description: '围绕你的研究方向，整理相关论文、方法与可复现研究证据。'
+  researcher: 'wang'
+  library_name: "wang's Object Detection Research Library"
+  description: '围绕目标检测，整理相关论文、方法与可复现研究证据。'
 research_scope:
   primary:
-    - '你的研究方向'
-  secondary: []
+    - '目标检测'
+  secondary:
+    - 'Object Detection'
+    - '2D Detection'
+    - '3D Detection'
+    - 'Open-Vocabulary Detection'
+    - 'Real-Time Detection'
 paper_selection:
   recent_year_window: 3
   priority: [quality, relevance]
@@ -22,5 +27,5 @@ daily:
   timezone: 'Asia/Shanghai'
   scheduled_time: '08:00'
 editor:
-  owner_github_username: ''
+  owner_github_username: 'kangkang03jug'
   api_origin: ''
