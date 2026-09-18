@@ -1,0 +1,10 @@
+{
+  "date": "2026-09-19",
+  "recommendations": [
+    {
+      "paper_id": "wedetect-fast-open-vocabulary-object-detection-as-retrieval",
+      "primary": true,
+      "run_type": "scheduled"
+    }
+  ]
+}
